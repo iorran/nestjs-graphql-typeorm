@@ -1,0 +1,39 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Message {
+  id: Int!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  id: Float!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  countUsers: [User!]!
+  findUsers: [User!]!
+  countMessages: [Message!]!
+  findMessage: [Message!]!
+}
+
+type Mutation {
+  createUser(email: String!): User!
+  updateUser(email: String!, id: String!): User!
+  deleteUser(id: String!): User!
+  createMessage(userId: Float!, content: String!): Message!
+  updateMessage(content: String!, id: Float!): Message!
+  deleteMessage(id: String!): Message!
+}
