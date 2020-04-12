@@ -5,7 +5,6 @@ import Message from './model/message.entity';
 import { MessageService } from './message.service'; 
 import User from 'src/user/model/user.entity'; 
 
-import { MessageArgs } from './dto/message.args';
 import { MessageInput } from './dto/message.input';
 
 import { PubSub } from 'graphql-subscriptions';
@@ -27,8 +26,8 @@ export class MessageResolver {
   }
 
   @Query(() => [Message])
-  public async findAllMessages(@Args() messageArgs: MessageArgs): Promise<Message[]> {
-    return this.messageService.findAll(messageArgs);
+  public async findAllMessages(): Promise<Message[]> {
+    return this.messageService.findAll();
   } 
 
   @Mutation(returns => Message)

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Message from './model/message.entity';
 import { Repository, DeleteResult } from 'typeorm'; 
-import { MessageArgs } from './dto/message.args';
 import { MessageInput } from './dto/message.input';
 
 @Injectable()
@@ -15,8 +14,8 @@ export class MessageService {
     return await this.messageRepository.count();
   }
 
-  async findAll(args: MessageArgs): Promise<Message[]> {
-    return await this.messageRepository.find(args);
+  async findAll(): Promise<Message[]> {
+    return await this.messageRepository.find();
   }
 
   async create(newMessage: MessageInput): Promise<Message> {      
