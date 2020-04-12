@@ -3,9 +3,9 @@ import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { PubSubEngine } from 'graphql-subscriptions';
 
-import Message from './message.entity';
+import Message from './model/message.entity';
 import { MessageService } from './message.service'; 
-import User from 'src/user/user.entity'; 
+import User from 'src/user/model/user.entity'; 
 
 import { PubSub } from 'graphql-subscriptions';
 const MESSAGE_ADDED = '@MESSAGE_ADDED';
@@ -17,7 +17,7 @@ export class MessageResolver {
   
   constructor(
     private messageService: MessageService,
-    // @Inject('PUB_SUB') private pubSub: PubSubEngine
+    @Inject('PUB_SUB') private pubSub: PubSubEngine
   ) {}
 
   @Query(() => [Message])
@@ -26,7 +26,7 @@ export class MessageResolver {
   }
 
   @Query(() => [Message])
-  public async findMessage(): Promise<Message[]> {
+  public async findMessages(): Promise<Message[]> {
     return this.messageService.find();
   } 
 

@@ -9,7 +9,7 @@ import {
 
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import Message from '../message/message.entity';
+import Message from '../../message/model/message.entity';
 
 @ObjectType()
 @Entity({name: 'users'})

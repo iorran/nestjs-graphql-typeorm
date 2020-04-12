@@ -26,7 +26,7 @@ type Query {
   countUsers: [User!]!
   findUsers: [User!]!
   countMessages: [Message!]!
-  findMessage: [Message!]!
+  findMessages: [Message!]!
 }
 
 type Mutation {

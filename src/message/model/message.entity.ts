@@ -8,14 +8,14 @@ import {
   ManyToOne,
 } from 'typeorm'; 
 
-import User from 'src/user/user.entity';
+import User from 'src/user/model/user.entity';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
 @Entity({name: 'messages'})
 export default class Message {
 
-  @Field(type => Int)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
