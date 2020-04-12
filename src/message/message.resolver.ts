@@ -1,11 +1,12 @@
-import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql'; 
-
-import { Inject } from '@nestjs/common';
-import { PubSubEngine } from 'graphql-subscriptions';
+import { UserService } from './../user/user.service';
+import { Resolver, Query, Mutation, Args, Subscription, Parent, ResolveField } from '@nestjs/graphql'; 
 
 import Message from './model/message.entity';
 import { MessageService } from './message.service'; 
 import User from 'src/user/model/user.entity'; 
+
+import { MessageArgs } from './dto/message.args';
+import { MessageInput } from './dto/message.input';
 
 import { PubSub } from 'graphql-subscriptions';
 const MESSAGE_ADDED = '@MESSAGE_ADDED';
@@ -16,8 +17,8 @@ const pubSub = new PubSub();
 export class MessageResolver {
   
   constructor(
-    private messageService: MessageService,
-    @Inject('PUB_SUB') private pubSub: PubSubEngine
+    private readonly messageService: MessageService,
+    private readonly userService: UserService
   ) {}
 
   @Query(() => [Message])
@@ -26,49 +27,39 @@ export class MessageResolver {
   }
 
   @Query(() => [Message])
-  public async findMessages(): Promise<Message[]> {
-    return this.messageService.find();
+  public async findAllMessages(@Args() messageArgs: MessageArgs): Promise<Message[]> {
+    return this.messageService.findAll(messageArgs);
   } 
 
   @Mutation(returns => Message)
   public async createMessage(
-    @Args('content') content: string,
-    @Args('userId') userId: number
+    @Args('data') message: MessageInput
   ) { 
-    const message = new Message();
-    message.content = content;
-
-    const user = new User();
-    user.id = userId;
-    
-    message.userConnection = user;
-
     const newMessage = this.messageService.create(message);
-
     pubSub.publish(MESSAGE_ADDED, newMessage );
-
     return newMessage;
   }
 
   @Mutation(() => Message)
   async updateMessage(
     @Args('id') id: number,
-    @Args('content') content: string
-  ) {
-    const message = new Message();
-    message.id = id; 
-    message.content = content; 
-     
+    @Args('data') message: MessageInput
+  ) { 
     return this.messageService.update(id, message);
   }
 
   @Mutation(() => Message)
-  async deleteMessage(@Args('id') id: string) {
+  async deleteMessage(@Args('id') id: number) {
     return this.messageService.delete(id);
   }
-  
+
   @Subscription(returns => Message)
   messageAdded() {
     return pubSub.asyncIterator(MESSAGE_ADDED);
+  }
+
+  @ResolveField(() => User, { name: 'user' })
+  async getUser(@Parent() parent: Message): Promise<User> {
+    return this.userService.find(parent.userId);
   }
 } 

@@ -20,6 +20,10 @@ export default class Message {
   id: number;
 
   @Field()
+  @Column({name: 'user_id'})
+  userId: number;
+
+  @Field()
   @Column()
   content: string;
 
@@ -37,5 +41,5 @@ export default class Message {
   // Associations
   @ManyToOne(() => User, user => user.messageConnection, {primary: true})
   @JoinColumn({name: 'user_id'})
-  userConnection: User;
+  userConnection: Promise<User>;
 }

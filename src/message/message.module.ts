@@ -1,16 +1,15 @@
+import { UserModule } from './../user/user.module';
 import { Module } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { MessageResolver } from './message.resolver';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { PubSub } from 'graphql-subscriptions';
-import Message from './model/message.entity';
+import { TypeOrmModule } from '@nestjs/typeorm'; 
+import Message from './model/message.entity'; 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Message])],
-  providers: [MessageService, MessageResolver,
-    {
-      provide: 'PUB_SUB',
-      useValue: new PubSub(),
-    }]
+  imports: [
+    TypeOrmModule.forFeature([Message]),
+    UserModule
+  ],
+  providers: [MessageService, MessageResolver]
 })
 export class MessageModule {}

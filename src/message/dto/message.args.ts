@@ -2,7 +2,7 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 
 @ArgsType()
-export class RecipesArgs {
+export class MessageArgs {
   @Field(type => Int) 
-  skip: number = 0; 
+  content; 
 }

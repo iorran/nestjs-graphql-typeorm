@@ -14,8 +14,8 @@ export class UserService {
     return await this.usersRepository.count();
   }
 
-  async find(): Promise<User[]> {
-    return await this.usersRepository.find();
+  async find(id: number): Promise<User> {
+    return await this.usersRepository.findOne({ id });
   }
 
   async create(user: any): Promise<User> {

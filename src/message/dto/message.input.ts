@@ -1,11 +1,12 @@
+import { Field, InputType } from '@nestjs/graphql';
+import { MaxLength } from 'class-validator';
 
-import { ArgsType, Field, Int } from '@nestjs/graphql';
+@InputType()
+export class MessageInput {
+  @Field()
+  @MaxLength(300)
+  content: string; 
 
-@ArgsType()
-export class RecipesArgs {
-  @Field(type => Int) 
-  skip: number = 0;
-
-  @Field(type => Int) 
-  take: number = 25;
+  @Field() 
+  userId: number; 
 }

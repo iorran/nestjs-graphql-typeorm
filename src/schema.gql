@@ -4,6 +4,7 @@
 
 type Message {
   id: Int!
+  userId: Float!
   content: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -23,19 +24,20 @@ type User {
 }
 
 type Query {
-  countUsers: [User!]!
-  findUsers: [User!]!
   countMessages: [Message!]!
-  findMessages: [Message!]!
+  findAllMessages(content: Int!): [Message!]!
 }
 
 type Mutation {
   createUser(email: String!): User!
-  updateUser(email: String!, id: String!): User!
-  deleteUser(id: String!): User!
-  createMessage(userId: Float!, content: String!): Message!
-  updateMessage(content: String!, id: Float!): Message!
-  deleteMessage(id: String!): Message!
+  createMessage(data: MessageInput!): Message!
+  updateMessage(data: MessageInput!, id: Float!): Message!
+  deleteMessage(id: Float!): Message!
+}
+
+input MessageInput {
+  content: String!
+  userId: Float!
 }
 
 type Subscription {

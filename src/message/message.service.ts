@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Message from './model/message.entity';
 import { Repository, DeleteResult } from 'typeorm'; 
+import { MessageArgs } from './dto/message.args';
+import { MessageInput } from './dto/message.input';
 
 @Injectable()
 export class MessageService {
@@ -13,19 +15,21 @@ export class MessageService {
     return await this.messageRepository.count();
   }
 
-  async find(): Promise<Message[]> {
-    return await this.messageRepository.find();
+  async findAll(args: MessageArgs): Promise<Message[]> {
+    return await this.messageRepository.find(args);
   }
 
-  async create(message: Message): Promise<Message> {  
+  async create(newMessage: MessageInput): Promise<Message> {      
+    const message = this.messageRepository.create(newMessage);
     return await this.messageRepository.save(message);
   }
 
-  async delete(id: string): Promise<DeleteResult> {
+  async delete(id: number): Promise<DeleteResult> {
     return await this.messageRepository.delete(id);
   }
 
-  async update(id: number, message: Message): Promise<Message> {
+  async update(id: number, updatedMessage: MessageInput): Promise<Message> {
+    const message = this.messageRepository.create(updatedMessage);
     await this.messageRepository.update(id, message);
     return this.messageRepository.findOne(id);
   }
