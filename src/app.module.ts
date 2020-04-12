@@ -1,24 +1,12 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule } from '@nestjs/graphql';
+import { Module } from '@nestjs/common'; 
 
-import * as ormconfig from './ormconfig';
-
-import { UserModule } from './user/user.module';
-import { MessageModule } from './message/message.module';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      ...ormconfig,
-      autoLoadEntities: true
-    }), 
-    GraphQLModule.forRoot({
-      autoSchemaFile: 'src/schema.gql',
-      playground: true
-    }),
-    UserModule,
-    MessageModule
+    CoreModule,
+    SharedModule
   ]
 })
 export class AppModule {}

@@ -1,13 +1,23 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'; 
+import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql'; 
+
+import { Inject } from '@nestjs/common';
+import { PubSubEngine } from 'graphql-subscriptions';
+
 import Message from './message.entity';
 import { MessageService } from './message.service'; 
-import User from 'src/user/user.entity';
+import User from 'src/user/user.entity'; 
 
-@Resolver('Message')
+import { PubSub } from 'graphql-subscriptions';
+const MESSAGE_ADDED = '@MESSAGE_ADDED';
+
+const pubSub = new PubSub();
+
+@Resolver(of => Message)
 export class MessageResolver {
   
   constructor(
-    private messageService: MessageService
+    private messageService: MessageService,
+    // @Inject('PUB_SUB') private pubSub: PubSubEngine
   ) {}
 
   @Query(() => [Message])
@@ -32,7 +42,12 @@ export class MessageResolver {
     user.id = userId;
     
     message.userConnection = user;
-    return this.messageService.create(message);
+
+    const newMessage = this.messageService.create(message);
+
+    pubSub.publish(MESSAGE_ADDED, newMessage );
+
+    return newMessage;
   }
 
   @Mutation(() => Message)
@@ -50,5 +65,10 @@ export class MessageResolver {
   @Mutation(() => Message)
   async deleteMessage(@Args('id') id: string) {
     return this.messageService.delete(id);
+  }
+  
+  @Subscription(returns => Message)
+  messageAdded() {
+    return pubSub.asyncIterator(MESSAGE_ADDED);
   }
 } 
